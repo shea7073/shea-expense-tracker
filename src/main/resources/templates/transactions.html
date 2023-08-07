@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+<table th:fragment="transactions" class="w-75 table table-striped m-auto">
+    <tr>
+        <th>Description</th>
+        <th>Time Added</th>
+        <th>Total</th>
+    </tr>
+    <tr th:each="transaction: ${transactions}">
+        <td th:text="${transaction.getDescription()}"></td>
+        <td th:text="${transaction.getDate()} + ' ' + ${transaction.getTime()}"></td>
+        <td th:text="${transaction.format()}"></td>
+    </tr>
+</table>
+
+
+</body>
+</html>

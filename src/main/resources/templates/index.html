@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - ExpenseTracker</title>
+    <link href="" th:replace="~{fragments/bootstrap :: bs-css}">
+    <script th:replace="~{fragments/bootstrap :: bs-js}"></script>
+</head>
+<body>
+
+<label for="time-choice">Time Period</label>
+<select id="time-choice">
+    <option th:value="'/daily'">Daily</option>
+    <option th:value="'/weekly'">Weekly</option>
+    <option th:value="'/monthly'">Monthly</option>
+</select>
+
+
+<div th:replace="~{fragments/glance :: glance}"></div>
+
+<table th:replace="~{transactions :: transactions}"></table>
+
+<script th:src="@{/js/index.js}"></script>
+
+</body>
+</html>
