@@ -1,13 +1,16 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Builder;
 
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
+import com.expensetracker.sheaexpensetracker.logic.Builder.Glance;
+import com.expensetracker.sheaexpensetracker.logic.Builder.GlanceBuilder;
+import com.expensetracker.sheaexpensetracker.logic.State.EvenState;
+import com.expensetracker.sheaexpensetracker.logic.State.NegativeState;
+import com.expensetracker.sheaexpensetracker.logic.State.PositiveState;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Component

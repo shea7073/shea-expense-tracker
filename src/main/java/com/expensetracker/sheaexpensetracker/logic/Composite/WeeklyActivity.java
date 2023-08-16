@@ -1,11 +1,12 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Composite;
 
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
+import com.expensetracker.sheaexpensetracker.logic.Composite.ActivityComponent;
+import com.expensetracker.sheaexpensetracker.logic.Composite.DailyActivity;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class WeeklyActivity extends ActivityComponent {

@@ -1,16 +1,29 @@
 package com.expensetracker.sheaexpensetracker.controller;
 
-import com.expensetracker.sheaexpensetracker.entity.Recurring;
+import com.expensetracker.sheaexpensetracker.entity.GoalEvent;
+import com.expensetracker.sheaexpensetracker.entity.ReminderEvent;
+import com.expensetracker.sheaexpensetracker.entity.TrackerEvent;
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
 import com.expensetracker.sheaexpensetracker.logic.*;
+import com.expensetracker.sheaexpensetracker.logic.Builder.*;
+import com.expensetracker.sheaexpensetracker.logic.Composite.ActivityComponent;
+import com.expensetracker.sheaexpensetracker.logic.Composite.DailyActivity;
+import com.expensetracker.sheaexpensetracker.logic.Composite.MonthlyActivity;
+import com.expensetracker.sheaexpensetracker.logic.Composite.WeeklyActivity;
+import com.expensetracker.sheaexpensetracker.logic.Decorator.GoalStyleDecorator;
+import com.expensetracker.sheaexpensetracker.logic.Decorator.ReminderStyleDecorator;
+import com.expensetracker.sheaexpensetracker.logic.Factory.GoalFactory;
+import com.expensetracker.sheaexpensetracker.logic.Factory.ReminderFactory;
+import com.expensetracker.sheaexpensetracker.logic.Strategy.DeleteEvent;
+import com.expensetracker.sheaexpensetracker.logic.Strategy.DismissEvent;
+import com.expensetracker.sheaexpensetracker.logic.Strategy.RemoveEvent;
+import com.expensetracker.sheaexpensetracker.repository.EventRepository;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,9 +34,12 @@ public class MainController {
     @Autowired
     TransactionRepository transactionRepository;
 
+    @Autowired
+    EventRepository eventRepository;
+
     @GetMapping("/{period}")
     public String index(Model model, @PathVariable("period") String period) {
-        List<Transaction> transactionList = transactionRepository.findAll();
+        //List<Transaction> transactionList = transactionRepository.findAll();
         GlanceBuilder builder = null;
         ActivityComponent activity = null;
         Director director = new Director();
@@ -72,6 +88,7 @@ public class MainController {
     @PostMapping("/addTransaction")
     public String submitTransaction(HttpServletRequest request){
         Map<String, String[]> parameterMap = request.getParameterMap();
+
         Transaction trans = new Transaction();
         trans.setUser("sean");
         trans.setDate(java.time.LocalDate.now());
@@ -80,26 +97,97 @@ public class MainController {
         trans.setType(parameterMap.get("type")[0]);
         trans.setDescription(parameterMap.get("description")[0]);
         trans.setAmount(Double.parseDouble(parameterMap.get("amount")[0]));
-        if (Boolean.parseBoolean(parameterMap.get("recurring")[0])) {
-            trans.setRecurring(true);
+        trans.setCategory(parameterMap.get("category")[0]);
+        System.out.println(parameterMap.entrySet());
+        if (parameterMap.get("recurring") != null) {
             String frequency = parameterMap.get("frequency")[0];
-            String category = parameterMap.get("category")[0];
             LocalDate nextCharge = LocalDate.parse(parameterMap.get("nextCharge")[0]);
-            trans = new Recurring(trans, frequency, category, nextCharge);
+            trans.setRecurring(true);
+            trans.setFrequency(frequency);
+            trans.setNextCharge(nextCharge);
         }
+
         transactionRepository.save(trans);
+
         return "redirect:/";
     }
 
-//    @PostMapping("/addTransaction")
-//    public String submitTransaction(@ModelAttribute("trans") Transaction trans){
-//        trans.setUser("sean");
-//        trans.setDate(java.time.LocalDate.now());
-//        trans.setTime(java.time.LocalTime.now());
-//        trans.setDatetime(java.time.LocalDateTime.now());
-//        transactionRepository.save(trans);
-//        return "redirect:/";
-//    }
+    @GetMapping("/goalsReminders")
+    public String goalsAndReminders(Model model){
+        GoalFactory factory1 = new GoalFactory();
+        GoalEvent goal = factory1.createEvent();
+        model.addAttribute("goal", goal);
+
+        ReminderFactory factory2 = new ReminderFactory();
+        ReminderEvent reminder = factory2.createEvent();
+        model.addAttribute("reminder", reminder);
+
+        List<ReminderStyleDecorator> decoratedReminders = new ArrayList<>();
+        List<ReminderEvent> reminders = eventRepository.getReminders("sean");
+        if (!reminders.isEmpty()){
+            for (int i = 0; i < reminders.size(); i++) {
+                decoratedReminders.add(new ReminderStyleDecorator(reminders.get(i)));
+            }
+        }
+
+        List<GoalStyleDecorator> decoratedGoals = new ArrayList<>();
+        List<GoalEvent> goals = eventRepository.getGoals("sean");
+        if (!goals.isEmpty()) {
+            for (int i = 0; i < goals.size(); i++) {
+                decoratedGoals.add(new GoalStyleDecorator(goals.get(i), transactionRepository));
+            }
+        }
+
+        List<TrackerEvent> inactives = eventRepository.getInactiveEvents("sean");
+        model.addAttribute("goals", decoratedGoals);
+        model.addAttribute("reminders", decoratedReminders);
+        model.addAttribute("inactives", inactives);
+        model.addAttribute("repo", transactionRepository);
+        return "goalsReminders";
+    }
+
+    @PostMapping("submitGoal")
+    public String submitGoal(@ModelAttribute("goal") GoalEvent goal) {
+        goal.setUser("sean");
+        goal.setActive(true);
+        eventRepository.save(goal);
+        return "redirect:/goalsReminders";
+    }
+
+    @PostMapping("submitReminder")
+    public String submitReminder(@ModelAttribute("reminder") ReminderEvent reminder){
+        reminder.setUser("sean");
+        reminder.setActive(true);
+        eventRepository.save(reminder);
+        return "redirect:/goalsReminders";
+    }
+
+    @PostMapping("/deleteEvent/{id}")
+    public String deleteEvent(@PathVariable("id") long id){
+        eventRepository.deleteById(id);
+        return "redirect:/goalsReminders";
+    }
+
+    @PostMapping("/removeEvent/{id}")
+    public String dismissEvent(HttpServletRequest request, @PathVariable("id") long id){
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        TrackerEvent trackerEvent = eventRepository.getReferenceById(id);
+        RemoveEvent removal = setDismissalContext(parameterMap.get("context")[0]);
+        removal.removeEvent(trackerEvent, eventRepository);
+        return "redirect:/goalsReminders";
+    }
+
+    public RemoveEvent setDismissalContext(String context){
+        if (Objects.equals(context, "dismiss")){
+            return new DismissEvent();
+        }
+        else if (Objects.equals(context, "delete")){
+            return new DeleteEvent();
+        }
+        else  {
+            throw new IllegalArgumentException();
+        }
+    }
 
 
 }

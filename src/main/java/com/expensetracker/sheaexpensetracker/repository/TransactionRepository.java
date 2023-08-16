@@ -16,5 +16,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(value = "SELECT * FROM transaction WHERE user = :user AND date BETWEEN :startDate AND :endDate", nativeQuery = true)
     List<Transaction> getTransactionsByDates(String user, LocalDate startDate, LocalDate endDate);
 
-
 }

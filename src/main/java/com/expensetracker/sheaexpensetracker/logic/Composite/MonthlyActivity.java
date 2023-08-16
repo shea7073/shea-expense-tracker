@@ -1,14 +1,13 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Composite;
 
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class MonthlyActivity extends ActivityComponent{
+public class MonthlyActivity extends ActivityComponent {
 
    public List<ActivityComponent> monthly = new ArrayList<>();
 
@@ -31,7 +30,7 @@ public class MonthlyActivity extends ActivityComponent{
                 WeeklyActivity weeklyActivity = new WeeklyActivity(transactionRepository);
                 weeklyActivity.build(startDate, startDate.plusDays(6));
                 days -= 7;
-                startDate = startDate.plusDays(6);
+                startDate = startDate.plusDays(7);
                 monthly.add(weeklyActivity);
             }
             else {
@@ -41,9 +40,7 @@ public class MonthlyActivity extends ActivityComponent{
                 startDate = startDate.plusDays(1);
                 days -= 1;
             }
-
         }
-
     }
 
     @Override

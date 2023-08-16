@@ -1,6 +1,7 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Composite;
 
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
+import com.expensetracker.sheaexpensetracker.logic.Composite.ActivityComponent;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

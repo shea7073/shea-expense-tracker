@@ -2,6 +2,7 @@ package com.expensetracker.sheaexpensetracker.entity;
 
 import com.expensetracker.sheaexpensetracker.logic.CurrencyFormatter;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -11,7 +12,6 @@ import java.time.LocalTime;
 
 @Entity
 public class Transaction {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +25,9 @@ public class Transaction {
 
     @Column
     private String type;
+
+    @Column
+    private String category;
 
     @Column
     private String user;
@@ -45,10 +48,34 @@ public class Transaction {
     private String frequency;
 
     @Column
-    private String category;
-
-    @Column
     private LocalDate nextCharge;
+
+
+    public boolean isRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(boolean recurring) {
+        this.recurring = recurring;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
+
+
+
+    public LocalDate getNextCharge() {
+        return nextCharge;
+    }
+
+    public void setNextCharge(LocalDate nextCharge) {
+        this.nextCharge = nextCharge;
+    }
 
 
     public LocalDateTime getDatetime() {
@@ -76,9 +103,7 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public String getCategory() {
-        return category;
-    }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -100,25 +125,7 @@ public class Transaction {
         this.user = user;
     }
 
-    public boolean isRecurring() {
-        return recurring;
-    }
 
-    public void setRecurring(boolean recurring) {
-        this.recurring = recurring;
-    }
-
-    public String getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public LocalTime getTime() {
         return time;
@@ -144,12 +151,13 @@ public class Transaction {
         return CurrencyFormatter.formatCurrency(this.getAmount());
     }
 
-
-    public LocalDate getNextCharge() {
-        return nextCharge;
+    public String getCategory() {
+        return category;
     }
 
-    public void setNextCharge(LocalDate nextCharge) {
-        this.nextCharge = nextCharge;
+    public void setCategory(String category) {
+        this.category = category;
     }
+
+
 }

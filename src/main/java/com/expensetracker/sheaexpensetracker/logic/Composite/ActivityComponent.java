@@ -1,4 +1,4 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Composite;
 
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
 

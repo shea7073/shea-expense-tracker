@@ -1,8 +1,6 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Builder;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.expensetracker.sheaexpensetracker.logic.Builder.Glance;
 
 public interface GlanceBuilder {
 

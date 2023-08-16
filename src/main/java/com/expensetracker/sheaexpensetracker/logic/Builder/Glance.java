@@ -1,4 +1,6 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Builder;
+
+import com.expensetracker.sheaexpensetracker.logic.State.AccountState;
 
 import java.time.LocalDate;
 

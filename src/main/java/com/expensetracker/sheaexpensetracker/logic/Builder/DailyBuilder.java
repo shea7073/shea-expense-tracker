@@ -1,9 +1,13 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.Builder;
 
 import com.expensetracker.sheaexpensetracker.entity.Transaction;
+import com.expensetracker.sheaexpensetracker.logic.Builder.Glance;
+import com.expensetracker.sheaexpensetracker.logic.Builder.GlanceBuilder;
+import com.expensetracker.sheaexpensetracker.logic.State.EvenState;
+import com.expensetracker.sheaexpensetracker.logic.State.NegativeState;
+import com.expensetracker.sheaexpensetracker.logic.State.PositiveState;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -47,7 +51,6 @@ public class DailyBuilder implements GlanceBuilder {
         this.glance.endDate = java.time.LocalDate.now();
     };
 
-    //ArrayList<HashMap<String, String>> getGraphData();
 
     public void getDailySpending(String user){
         LocalDate date = LocalDate.now();
@@ -63,7 +66,6 @@ public class DailyBuilder implements GlanceBuilder {
 
     public void getHighestCategory(String user) {
         LocalDate startDate = this.glance.startDate;
-        LocalDate endDate = this.glance.endDate;
         String highestCategory = "";
         List<Transaction> todaysTrans = transactionRepository.getTodaysTransactions(user, startDate);
         HashMap<String, Integer> countMap = new HashMap<>();

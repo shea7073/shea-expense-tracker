@@ -1,10 +1,10 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.State;
 
-public class PositiveState extends AccountState {
+import com.expensetracker.sheaexpensetracker.logic.State.AccountState;
 
-    String mainColor = "green";
+public class NegativeState extends AccountState {
 
-    String secondaryColor = "rgba(0, 255, 0, 0.36)";
+    String mainColor = "red";
 
     public String getMainColor() {
         return mainColor;
@@ -21,4 +21,8 @@ public class PositiveState extends AccountState {
     public void setSecondaryColor(String secondaryColor) {
         this.secondaryColor = secondaryColor;
     }
+
+    String secondaryColor = "rgba(252, 0, 0 ,.36)";
+
+
 }

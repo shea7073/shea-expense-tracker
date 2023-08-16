@@ -8,6 +8,9 @@
 </head>
 <body>
 
+<div th:replace="~{fragments/header :: header}"></div>
+
+
 <label for="time-choice">Time Period</label>
 <select id="time-choice">
     <option th:value="'/daily'">Daily</option>

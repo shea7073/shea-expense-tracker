@@ -1,4 +1,4 @@
-package com.expensetracker.sheaexpensetracker.logic;
+package com.expensetracker.sheaexpensetracker.logic.State;
 
 public abstract class AccountState {
 

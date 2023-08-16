@@ -8,12 +8,14 @@
 </head>
 <body>
 
+<div th:replace="~{fragments/header :: header}"></div>
 
-<form class="d-flex flex-column w-50 m-auto" th:action="@{/addTransaction}" method="post" th:object="${trans}">
+
+<form class="d-flex flex-column w-50 m-auto" th:action="@{/addTransaction}" method="post">
 
     <div class="p-2">
         <label th:for="type">Transaction Type</label>
-        <select th:field="*{type}" id="type">
+        <select id="type" name="type" required>
             <option th:value="expense">Expense</option>
             <option th:value="income">Income</option>
         </select>
@@ -22,37 +24,18 @@
 
     <div class="p-2">
         <label th:for="description">Description</label>
-        <input id="description" type="text" th:field="*{description}">
+        <input id="description" type="text" name="description" required>
     </div>
 
 
     <div class="p-2">
         <label th:for="amount">Amount $</label>
-        <input id="amount" type="number" step=".01" min=".01" placeholder="0.00" value="" th:field="*{amount}">
+        <input id="amount" type="number" step=".01" min=".01" placeholder="0.00" value="" name="amount" required>
     </div>
-
-    <div class="p-2" id="recurring-checkbox">
-        <label th:for="recurring">Recurring?</label>
-        <input id="recurring" type="checkbox" th:field="*{recurring}">
-    </div>
-
-
-    <div class="p-2 d-none" id="frequency">
-        <label th:for="freq">Transaction Frequency</label>
-        <select id="freq" th:field="*{frequency}">
-            <option th:value="NA">N/A</option>
-            <option th:value="Daily">Daily</option>
-            <option th:value="Weekly">Weekly</option>
-            <option th:value="Bi-Weekly">Bi-Weekly</option>
-            <option th:value="Monthly">Monthly</option>
-            <option th:value="Annually">Annually</option>
-        </select>
-    </div>
-
 
     <div class="p-2 mb-2 d-none" id="category">
         <label th:for="cat">Transaction Category</label>
-        <select id="cat" th:field="*{category}">
+        <select id="cat" name="category" required>
             <option th:value="NA">N/A</option>
             <option th:value="Food">Food</option>
             <option th:value="Gas">Gas</option>
@@ -62,9 +45,27 @@
         </select>
     </div>
 
+    <div class="p-2" id="recurring-checkbox">
+        <label th:for="recurring">Recurring?</label>
+        <input id="recurring" type="checkbox" name="recurring">
+    </div>
+
+
+    <div class="p-2 d-none" id="frequency">
+        <label th:for="freq">Transaction Frequency</label>
+        <select id="freq" name="frequency">
+            <option th:value="NA">N/A</option>
+            <option th:value="Daily">Daily</option>
+            <option th:value="Weekly">Weekly</option>
+            <option th:value="Bi-Weekly">Bi-Weekly</option>
+            <option th:value="Monthly">Monthly</option>
+            <option th:value="Annually">Annually</option>
+        </select>
+    </div>
+
     <div class="p-2 mb-2 d-none" id="next-charge">
         <label>When should we start charging?</label>
-        <input id="next" type="date" th:field="*{nextCharge}">
+        <input id="next" type="date" name="nextCharge">
     </div>
 
 

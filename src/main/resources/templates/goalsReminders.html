@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Goals and Reminders</title>
+  <link href="" th:replace="~{fragments/bootstrap :: bs-css}">
+  <script th:replace="~{fragments/bootstrap :: bs-js}"></script>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="d-flex justify-content-center">
+    <a class="p-2 m-2 btn btn-primary text-center" href="#goal-form">Add a goal</a>
+  <a class="p-2 m-2 btn btn-primary" href="#reminder-form">Add a reminder</a>
+</div>
+
+<h1 style="text-align: center">My Current Events</h1>
+
+
+<table class="w-75 m-auto table">
+    <caption class="d-block fs-3">Active Reminders</caption>
+    <tr>
+        <th>Description</th>
+    </tr>
+    <tr th:each="reminder : ${reminders}" >
+        <td th:style="'color:' + ${reminder.getColor()}" th:text="${reminder.notifyUser()}"></td>
+        <form method="post" th:action="@{'/removeEvent/' + ${reminder.getId()}}">
+            <td><select name="context">
+                <option th:value="dismiss">Dismiss</option>
+                <option th:value="delete">Delete</option>
+            </select></td>
+            <td><button type="submit" class="btn btn-danger">Dismiss</button></td>
+        </form>
+    </tr>
+</table>
+
+<hr>
+
+
+<table class="w-75 m-auto table">
+    <caption class="d-block fs-3">Active Goals</caption>
+    <tr>
+        <th>Description</th>
+    </tr>
+    <tr th:each="goal : ${goals}">
+        <td th:style="'color:' + ${goal.getColor()}" th:text="${goal.notifyUser()}"></td>
+
+        <form method="post" th:action="@{'/removeEvent/' + ${goal.getId()}}">
+            <td><select name="context">
+                <option th:value="dismiss">Dismiss</option>
+                <option th:value="delete">Delete</option>
+            </select></td>
+            <td><button type="submit" class="btn btn-danger">Dismiss</button></td>
+        </form>
+
+    </tr>
+</table>
+
+<hr>
+
+
+<table class="w-75 m-auto table">
+    <caption class="d-block fs-3">Inactive Events</caption>
+    <tr>
+        <th>Description</th>
+    </tr>
+    <tr th:each="inactive : ${inactives}">
+        <td th:text="${inactive.getTitle()}"></td>
+        <td th:text="${inactive.getDueDate()}"></td>
+        <td>
+        <form th:action="@{'/deleteEvent/' + ${inactive.getId()}}" method="post">
+            <button class="btn btn-primary" type="submit">Delete</button>
+        </form>
+        </td>
+    </tr>
+</table>
+
+
+<hr>
+
+<div class="w-50  justify-content-center m-auto p-3" id="goal-form">
+    <h3 class="text-center">Create a Goal</h3>
+
+    <form class="d-flex flex-column" th:action="@{/submitGoal}" method="post" th:object="${goal}">
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="title">Title: </label>
+            <input class="w-75" id="title" type="text" th:field="*{title}" required>
+        </div>
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="description">Description: </label>
+            <input class="w-75" id="description" type="text" th:field="*{description}" required>
+        </div>
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="dueDate">Due Date: </label>
+            <input class="w-75" type="date" id="dueDate" th:field="*{dueDate}" required>
+        </div>
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="type">Type of Goal: </label>
+            <select class="w-75" id="type" th:field="*{type}" required>
+                <option th:value="spending">Control Spending</option>
+                <option th:value="saving">Save More</option>
+            </select>
+        </div>
+
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="period">Time Period: </label>
+            <select class="w-75" id="period" th:field="*{period}" required>
+                <option th:value="weekly">By Week</option>
+                <option th:value="monthly">By Month</option>
+            </select>
+        </div>
+
+        <div class="d-flex m-2">
+        <label class="w-25" for="amount">Goal Amount</label>
+        <input class="w-75" id="amount" type="number" step=".01" min=".01" placeholder="0.00" value="" name="amount" required>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+    </form>
+</div>
+
+
+<div class="w-50  justify-content-center m-auto p-3" id="reminder-form">
+    <h3 class="text-center">Create a Reminder</h3>
+    <form class="d-flex flex-column" th:action="@{/submitReminder}" method="post" th:object="${reminder}">
+
+        <div class="d-flex m-2 w-100">
+            <label class="w-25"for="title2">Title: </label>
+            <input class="w-75" id="title2" type="text" th:field="*{title}" required>
+        </div>
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="description2">Description: </label>
+            <input class="w-75" id="description2" type="text" th:field="*{description}" required>
+        </div>
+
+        <div class="d-flex m-2">
+            <label class="w-25" for="dueDate2">Due Date: </label>
+            <input class="w-75" type="date" id="dueDate2" th:field="*{dueDate}" required>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+
+    </form>
+
+</div>
+
+
+
+</body>
+</html>
