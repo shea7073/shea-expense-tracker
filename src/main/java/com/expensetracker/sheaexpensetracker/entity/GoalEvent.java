@@ -1,5 +1,6 @@
 package com.expensetracker.sheaexpensetracker.entity;
 
+import com.expensetracker.sheaexpensetracker.logic.CurrencyFormatter;
 import com.expensetracker.sheaexpensetracker.repository.TransactionRepository;
 import jakarta.persistence.*;
 import java.time.DayOfWeek;
@@ -147,12 +148,12 @@ public class GoalEvent extends TrackerEvent {
         if (Objects.equals(this.getType(), "spending")) {
 
             String formattedPeriod = this.getPeriod() == "monthly" ? "month" : "week";
-            return "You're spending so far this " + formattedPeriod + " is $" + progress + " and your goal was $" + this.getAmount();
+            return "You're spending so far this " + formattedPeriod + " is " + format(progress) + " and your goal was $" + this.getAmount();
 
         } else if (Objects.equals(this.getType(), "saving")) {
 
             String formattedPeriod = this.getPeriod() == "monthly" ? "month" : "week";
-            return "You're savings so far this " + formattedPeriod + " is $" + progress + " and your goal was $" + this.getAmount();
+            return "You're savings so far this " + formattedPeriod + " is " + format(progress) + " and your goal was $" + this.getAmount();
 
         } else {
             throw new IllegalArgumentException();
@@ -184,6 +185,10 @@ public class GoalEvent extends TrackerEvent {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public String format(double amount) {
+        return CurrencyFormatter.formatCurrency(amount);
     }
 
 }

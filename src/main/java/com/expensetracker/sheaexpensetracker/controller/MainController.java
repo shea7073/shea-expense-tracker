@@ -98,7 +98,6 @@ public class MainController {
         trans.setDescription(parameterMap.get("description")[0]);
         trans.setAmount(Double.parseDouble(parameterMap.get("amount")[0]));
         trans.setCategory(parameterMap.get("category")[0]);
-        System.out.println(parameterMap.entrySet());
         if (parameterMap.get("recurring") != null) {
             String frequency = parameterMap.get("frequency")[0];
             LocalDate nextCharge = LocalDate.parse(parameterMap.get("nextCharge")[0]);

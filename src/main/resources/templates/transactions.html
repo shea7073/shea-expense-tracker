@@ -16,7 +16,8 @@
     <tr th:each="transaction: ${transactions}">
         <td th:text="${transaction.getDescription()}"></td>
         <td th:text="${transaction.getDate()} + ' ' + ${transaction.getTime()}"></td>
-        <td th:text="${transaction.format()}"></td>
+        <td th:if="${transaction.getType() == 'expense'}" th:text="'-' + ${transaction.format()}"></td>
+        <td th:unless="${transaction.getType() == 'expense'}" th:text="${transaction.format()}"></td>
     </tr>
 
 </table>
